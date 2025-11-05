@@ -1,9 +1,28 @@
+import { useDispatch } from "react-redux";
+import addBook from "../redux/thunks/addBook";
+
 function BookForm() {
+  const dispatch = useDispatch();
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const formData = new FormData(form);
+    const bookData = Object.fromEntries(formData.entries());
+    const newBook = {
+      ...bookData,
+      price: Number(bookData.price),
+      rating: Number(bookData.rating),
+
+      featured: bookData.featured ? true : false,
+    };
+    dispatch(addBook(newBook));
+    console.log(newBook);
+  };
   return (
     <div>
       <div className="p-4 overflow-hidden bg-white shadow-cardShadow rounded-md">
         <h4 className="mb-8 text-xl font-bold text-center">Add New Book</h4>
-        <form className="book-form">
+        <form onSubmit={handleSubmit} className="book-form">
           <div className="space-y-2">
             <label htmlFor="name">Book Name</label>
             <input
