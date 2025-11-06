@@ -4,7 +4,7 @@ import StarIcon from "./StarIcon";
 import UpdateIcon from "./UpdateIcon";
 import deleteBook from "../redux/thunks/deleteBook";
 
-function BookCard({ book }) {
+function BookCard({ book, updatedBookHandler }) {
   const { thumbnail, rating, price, name, id, featured, author } = book;
   const dispatch = useDispatch();
   const hanldeDeleteBook = (bookID) => {
@@ -23,7 +23,10 @@ function BookCard({ book }) {
             <span className="badge-success lws-Badge">featured</span>
           )}
           <div className="text-gray-500 space-x-2">
-            <button className="lws-edit">
+            <button
+              onClick={() => updatedBookHandler(book)}
+              className="lws-edit"
+            >
               <UpdateIcon />
             </button>
             <button onClick={() => hanldeDeleteBook(id)} className="lws-delete">

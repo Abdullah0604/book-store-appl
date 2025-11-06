@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import { useEffect } from "react";
 import fetchBooks from "../redux/thunks/fetchBooks";
 
-function BookList() {
+function BookList({ updatedBookHandler }) {
   const storedBooks = useSelector((state) => state);
   const dispatch = useDispatch();
 
@@ -32,7 +32,11 @@ function BookList() {
         <div className="lws-bookContainer">
           {/* <!-- Card 1 --> */}
           {storedBooks.map((book) => (
-            <BookCard key={book.id} book={book} />
+            <BookCard
+              updatedBookHandler={updatedBookHandler}
+              key={book.id}
+              book={book}
+            />
           ))}
         </div>
       ) : (
