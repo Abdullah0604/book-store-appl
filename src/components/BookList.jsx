@@ -1,17 +1,33 @@
 import { useSelector } from "react-redux";
 import BookCard from "./BookCard";
 import { useDispatch } from "react-redux";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import fetchBooks from "../redux/thunks/fetchBooks";
 
 function BookList({ updatedBookHandler }) {
   const storedBooks = useSelector((state) => state);
+  const [books, setBooks] = useState();
+  const [filter, setFilter] = useState("all");
   const dispatch = useDispatch();
 
+  const featuredBooks = storedBooks.filter((book) => book.featured);
+
+  const handleFeatured = (status) => {
+    if (status === "featured") {
+      setBooks([...featuredBooks]);
+      setFilter("featured");
+    } else {
+      setBooks(storedBooks);
+      setFilter("all");
+    }
+  };
   useEffect(() => {
     dispatch(fetchBooks);
   }, [dispatch]);
-  console.log(storedBooks);
+  useEffect(() => {
+    setBooks(storedBooks);
+  }, [storedBooks]);
+  console.log(books);
   return (
     <div className="order-2 xl:-order-1">
       {/* filter  */}
@@ -19,19 +35,27 @@ function BookList({ updatedBookHandler }) {
         <h4 className="mt-2 text-xl font-bold">Book List</h4>
 
         <div className="flex items-center space-x-4">
-          <button className="filter-btn active-filter" id="lws-filterAll">
+          <button
+            onClick={() => handleFeatured("all")}
+            className={`filter-btn ${filter === "all" && "active-filter"}`}
+            id="lws-filterAll"
+          >
             All
           </button>
-          <button className="filter-btn" id="lws-filterFeatured">
+          <button
+            onClick={() => handleFeatured("featured")}
+            className={`filter-btn ${filter === "featured" && "active-filter"}`}
+            id="lws-filterFeatured"
+          >
             Featured
           </button>
         </div>
       </div>
       {/* books container */}
-      {storedBooks && storedBooks.length > 0 ? (
+      {books && books.length > 0 ? (
         <div className="lws-bookContainer">
           {/* <!-- Card 1 --> */}
-          {storedBooks.map((book) => (
+          {books.map((book) => (
             <BookCard
               updatedBookHandler={updatedBookHandler}
               key={book.id}
